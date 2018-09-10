@@ -1,0 +1,32 @@
+<?php 
+
+$str = "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20";
+$skip = 1;
+$arr = explode("," ,$str);
+getNewArr($arr, $skip);
+function getNewArr($arr, $skip){
+		$i = 0;
+		$newarr = array();
+		if (count($arr) > 1) {
+			foreach ($arr as $key => $value) {
+				if($key == 0){
+				$newarr[] = $value;
+					$i = 0;
+				}else if($skip == $i){
+					$newarr[] = $value;
+					$i = 0;
+				}else{
+					$i++;
+				}
+			}
+		}
+		print_r($newarr);
+		die;
+		if(!empty($newarr)){
+			$skip++;
+		  return getNewArr($newarr, $skip);
+		}
+
+		return $newarr;
+}
+?>
