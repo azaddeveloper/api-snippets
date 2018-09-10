@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<?php
+       $this->load->view('header/link');
+    ?>
+	 <link type="text/css" rel="stylesheet" href="<?=base_url()?>css/pages/dataTables.bootstrap.css" />
+     
+    <!--Page level styles-->
+    <link type="text/css" rel="stylesheet" href="<?=base_url()?>css/pages/tables.css" />
+	 <script>
+       $(document).ready(function(){
+        $('#page1').twbsPagination({
+            totalPages: <?php echo $total_row; ?>,
+            visiblePages: 5,
+            }).on("page", function(event, /* page number here */ num){
+            $.ajax({
+                    url:'<?php echo base_url(); ?>Test/nextpage',
+                    type:"post",
+                    data:{
+                        page_no:num,
+                    },
+                    success:function(a){
+                       $(".table").replaceWith(a);
+                         //console.log(a);
+                    }
+                 })
+
+        });
+           $(document).on("change",".entries",function(){
+                var limit=$(this).val();
+                 $.ajax({
+                    url:'<?php echo base_url(); ?>Test/entriesPage',
+                    type:"post",
+                    data:{
+                        limit:limit,
+                    },
+                    success:function(a){
+                      $(".table").replaceWith(a);
+                          $('#page1').twbsPagination({
+               totalPages: 5,
+               visiblePages: 5,
+               }).on("page", function(event, /* page number here */ num){
+                $.ajax({
+                    url:'<?php echo base_url(); ?>Test/nextpage',
+                    type:"post",
+                    data:{
+                        page_no:num,
+                        limit:limit
+                    },
+                    success:function(a){
+                       $(".table").replaceWith(a);
+                         //console.log(a);
+                    }
+                 })
+
+        });
+                    }
+                 })
+                 
+           }); 
+        });
+        
+    </script>
+</head>
+<body>
+	<select class="entries">
+		<option value="10">10</option>
+		<option value="20">20</option>
+		<option value="50">50</option>
+    </select>
+<table class="table table-inverse table">
+	<tr>
+		<th>ID</th>
+		<th>Name</th>
+		<th>Mobile Number</th>
+		<th>Department</th>
+		<th>Designation</th>
+		<th>Location</th>
+
+	</tr>
+	<?php
+	if(isset($list))
+	{
+		foreach($list as $row)
+		{
+	?>
+	  <tr>
+	  	<td><?php echo $row['employee_id']?></td>
+	  	<td><?php echo $row['first_name']?></td>
+	  	<td><?php echo $row['phone_number']?></td>
+	  	<td><?php echo $row['department']?></td>
+	  	<td><?php echo $row['designation']?></td>
+	  	<td><?php echo $row['location']?></td>
+     </tr>
+	<?php
+      }
+
+	}
+	else
+	{
+		echo "not found";
+	}
+
+	?>
+</table>
+<div id="page1"></div>                 
+</body>
+</html>
+<?php
+       $this->load->view('footer');
+    ?>
+    <!-- <script type="text/javascript" src="<?=base_url()?>js/bootpag.js"></script> -->
+      <script src="<?=base_url()?>js/jquery.twbsPagination.js" type="text/javascript"></script>
